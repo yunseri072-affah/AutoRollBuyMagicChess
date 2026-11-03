@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             if (checkSystemPermissions()) {
                 startAutomationServices()
             } else {
-                Toast.kt(this, "Harap berikan izin terlebih dahulu!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Harap berikan izin terlebih dahulu!", Toast.LENGTH_SHORT).show()
                 appendLog("Gagal Start: Izin Accessibility atau Overlay belum aktif.")
             }
         }
@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermissions() {
-        // 1. Izin Overlay (Display over other apps)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             val intent = Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
@@ -58,7 +57,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 2. Izin Accessibility Service
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
         startActivity(intent)
         
@@ -67,12 +65,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkSystemPermissions(): Boolean {
         val overlayChecked = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
-        // Catatan: Pengecekan accessibility sederhana lewat kesiapan service
         return overlayChecked
     }
 
     private fun startAutomationServices() {
-        // Mulai Floating Overlay Service
         val overlayIntent = Intent(this, OverlayService::class.java)
         startService(overlayIntent)
 
@@ -83,7 +79,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopAutomationServices() {
-        // Hentikan Overlay Service
         val overlayIntent = Intent(this, OverlayService::class.java)
         stopService(overlayIntent)
 
